@@ -2,6 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.6.  Demonstration of how to implement the CKEditor using Angular.
 
+Angular implementation of the JavaScript CKEditor4 drag and drop feature https://ckeditor.com/docs/ckeditor4/latest/examples/draganddrop.html.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
