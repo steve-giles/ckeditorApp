@@ -1,6 +1,6 @@
 # CkeditorApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.6.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.6.  Demonstration of how to implement the CKEditor using Angular.
 
 ## Development server
 

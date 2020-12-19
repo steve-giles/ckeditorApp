@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ckeditorApp"
+    }
+  },
+  "defaultProject": "ckeditorApp",
+  "cli": {
+    "analytics": false
+  }
 }
