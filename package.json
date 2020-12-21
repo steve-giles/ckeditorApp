@@ -1,6 +1,13 @@
 {
   "name": "ckeditor-app",
-  "version": "0.0.0",
+  "description": "Angular implementation of CKEditor with drag and drop.",
+  "license": "(GPL-2.0-or-later OR LGPL-2.1 OR MPL-1.1)",
+  "author": "Steve Giles",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/steve-giles/ckeditorApp.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +16,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "~10.1.5",
     "@angular/common": "~10.1.5",

@@ -9,12 +9,36 @@ declare var CKEDITOR: any;
 })
 export class AppComponent implements OnInit {
 
+  public editorDirty = false;
+
+  editorId = 'editor1';
+
+  samplePage = `
+      <html>
+        <head>
+            <title>Sample web page</title>
+        </head>
+        <body>
+          <h1>The Annual Meeting of Fictional Characters</h1>
+          <h3>Technical Announcement</h3>
+          <p>We hereby have the pleasure to announce that the theme of this year&apos;s meeting is &quot;<strong>E&#x2013;ink Technology and Classical Fairy Tales</strong>&quot;. As every year, the event will be hosted in <em>The Wonderland</em> by <span class="h-card"><a class="p-name u-email" href="mailto:alice@example.com">Alice</a> <span class="p-tel">+20 4345 234 235</span></span> and starts tomorrow at 8:00 GMT.</p>
+          <h3>Speakers and Agenda</h3>
+          <p>TBA.</p>
+          <h3>Venue</h3>
+          <p>For detailed information, please contact <span class="h-card"><a class="p-name u-email" href="mailto:h.finn@example.com">Huckleberry Finn</a> <span class="p-tel">+48 1345 234 235</span></span>.</p>
+          <h3>Accommodation</h3>
+          <p>Many thanks to <span class="h-card"><a class="p-name u-email" href="mailto:r.crusoe@example.com">Robinson Crusoe</a> <span class="p-tel">+45 2345 234 235</span></span> who kindly offered his island to the guests of the annual meeting.</p>
+          <hr>
+          <p style="text-align: right;"><span class="h-card"><a class="p-name u-email" href="mailto:lrrh@example.com">Little Red Riding Hood</a> <span class="p-tel">+45 2345 234 235</span></span></p>
+        </body>
+      </html>`;
+
   CONTACTS = [{
-    name: 'Huckleberry Finn',
-    tel: '+48 1345 234 235',
-    email: 'h.finn@example.com',
-    avatar: 'hfin'
-  },
+      name: 'Huckleberry Finn',
+      tel: '+48 1345 234 235',
+      email: 'h.finn@example.com',
+      avatar: 'hfin'
+    },
     {
       name: 'D\'Artagnan',
       tel: '+45 2345 234 235',
@@ -61,54 +85,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    CKEDITOR.plugins.add('hcard', {
-      requires: 'widget',
-
-      init(editor): void {
-        editor.widgets.add('hcard', {
-          allowedContent: 'span(!h-card); a[href](!u-email,!p-name); span(!p-tel)',
-          requiredContent: 'span(h-card)',
-          pathName: 'hcard',
-
-          upcast: (el) => {
-            return el.name === 'span' && el.hasClass('h-card');
-          }
-        });
-
-        // This feature does not have a button, so it needs to be registered manually.
-        editor.addFeature(editor.widgets. registered.hcard);
-
-        // Handle dropping a contact by transforming the contact object into HTML.
-        // Note: All pasted and dropped content is handled in one event - editor#paste.
-        editor.on('paste', (evt) => {
-          const contact = evt.data.dataTransfer.getData('contact');
-          if (!contact) {
-            return;
-          }
-
-          evt.data.dataValue =
-            '<span class="h-card">' +
-            '<a href="mailto:' + contact.email + '" class="p-name u-email">' + contact.name + '</a>' +
-            ' ' +
-            '<span class="p-tel">' + contact.tel + '</span>' +
-            '</span>';
-        });
-      }
-    });
-
-    CKEDITOR.replace( 'editor1', {
-      extraPlugins: 'hcard, sourcedialog',
-      toolbar: [
-        { name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
-        { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', '-', 'Undo', 'Redo' ] },
-        { name: 'document', items: ['Source'] }
-      ],
-      allowedContent: true,
-      fullPage: true,
-      height: '500px'
-    });
+    CKEDITOR.replace(this.editorId);
 
     CKEDITOR.on('instanceReady', (event) => {
+      console.log(`instanceReady: ${event}`);
+
       // When an item in the contact list is dragged, copy its data into the drag and drop data transfer.
       // This data is later read by the editor#paste listener in the hcard plugin defined above.
       CKEDITOR.document.getById('contactList').on('dragstart', (evt) => {
@@ -142,18 +123,70 @@ export class AppComponent implements OnInit {
       });
 
     });
+
+    // for demo purposes set the editor with sample data
+    CKEDITOR.instances[this.editorId].setData(this.samplePage);
+
+    CKEDITOR.instances.editor1.on('mode', (event) => {
+      console.log(`mode: ${event}` );
+    });
+
+    CKEDITOR.instances.editor1.on('change', (event) => {
+      this.editorDirty = CKEDITOR.instances.editor1.checkDirty();
+      console.log(`change: ${this.editorDirty}` );
+    });
+
+    this.addItems(
+      CKEDITOR.document.getById( 'contactList' ),
+      new CKEDITOR.template(
+        '<div class="contact h-card" data-contact="{id}">' +
+        '<img src="assets/draganddrop/img/{avatar}.png" alt="avatar" class="u-photo" /> {name}' +
+        '</div>'
+      ),
+      this.CONTACTS
+    );
   }
 
   /**
-   * Saves the template
+   * Saves the editor data
    */
   saveData(event): void {
+    const dirty = CKEDITOR.instances.editor1.checkDirty();
+
+    if (!dirty) {
+      console.log('Nothing to save as no changes were made');
+      return;
+    }
+
     const data = CKEDITOR.instances.editor1.getData();
-    console.log(data);
+    console.log(`saveData: ${data}`);
+  }
+
+  /**
+   * Adds draggable contacts
+   * @param listElement
+   * @param template
+   * @param items
+   */
+  addItems( listElement, template, items ): void {
+    for (let i = 0, draggable, item; i < items.length; i++ ) {
+      item = new CKEDITOR.dom.element( 'li' );
+      draggable = CKEDITOR.dom.element.createFromHtml(
+        template.output( {
+          id: i,
+          name: items[ i ].name,
+          avatar: items[ i ].avatar
+        } )
+      );
+      draggable.setAttributes( {
+        draggable: 'true',
+        tabindex: '0'
+      } );
+
+      item.append( draggable );
+      listElement.append( item );
+    }
   }
 
 }
-
-
-
 

@@ -4,6 +4,20 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Angular implementation of the JavaScript CKEditor4 drag and drop feature https://ckeditor.com/docs/ckeditor4/latest/examples/draganddrop.html.
 
+## Changes
+
+### Run CKEditor Locally
+
+CKeditor is running locally in assets/ckeditor.  Obtained from https://ckeditor.com/ckeditor-4/download/.
+
+### Plugin
+
+Custom drag and drop plugin for an "hcard" is located in assets/ckeditor/plugins/hcard.
+
+### Editor configuration
+
+Custom editor configuration is located in assets/ckeditor/config.js.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
