@@ -6,7 +6,10 @@
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/steve-giles/ckeditorApp.git"
+    "url": "git://github.com/steve-giles/ckeditor-app.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@steve-giles"
   },
   "scripts": {
     "ng": "ng",
