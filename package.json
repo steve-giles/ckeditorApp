@@ -1,12 +1,12 @@
 {
-  "name": "ckeditor-app",
+  "name": "@steve-giles/ckeditorapp",
   "description": "Angular implementation of CKEditor with drag and drop.",
   "license": "(GPL-2.0-or-later OR LGPL-2.1 OR MPL-1.1)",
   "author": "Steve Giles",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/steve-giles/ckeditor-app.git"
+    "url": "git://github.com/steve-giles/ckeditorapp.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/@steve-giles"
